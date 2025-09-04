@@ -2,7 +2,7 @@
 if(isset($_POST['botao'])){
     $connection = new \mysqli("localhost","root","","contatos");
 	$connection->set_charset("utf8");
-    $sql = "insert into pessoas(nome,email) values ('{$_POST['nome']}', '{$_POST['email']}')";
+    $sql = "insert into pessoas(nome,email,telefone) values ('{$_POST['nome']}', '{$_POST['email']}',{$_POST['telefone']})";
 	$result = $connection->query($sql);
     header("location: index.php");
 }
@@ -20,6 +20,8 @@ if(isset($_POST['botao'])){
         Nome: <input name='nome' type='text' required>
         <br>
         E-mail: <input name='email' type='email' required>
+        <br>
+        Telefone: <input type="text" name="telefone">
         <br>
         <input type='submit' name='botao'>
     </form>
