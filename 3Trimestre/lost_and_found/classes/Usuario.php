@@ -1,12 +1,12 @@
 <?php
 
-require_once __DIR__."\..\bd\MySQL.php";
+require_once __DIR__."/../bd/MySQL.php";
 
 class Usuario{
 
     private int $idUsuario;
     
-    public function __construct(private string $email,private string $senha){
+    public function __construct(private string $email, private string $senha){
     }
 
     public function setIdUsuario(int $idUsuario):void{
@@ -29,16 +29,16 @@ class Usuario{
         $conexao = new MySQL();
         $this->senha = password_hash($this->senha,PASSWORD_BCRYPT); 
         if(isset($this->idUsuario)){
-            $sql = "UPDATE usuarios SET email = '{$this->email}' ,senha = '{$this->senha}' WHERE idUsuario = {$this->idUsuario}";
+            $sql = "UPDATE usuario SET email = '{$this->email}' , senha = '{$this->senha}' WHERE idUsuario = {$this->idUsuario}";
         }else{
-            $sql = "INSERT INTO usuarios (email,senha) VALUES ('{$this->email}','{$this->senha}')";
+            $sql = "INSERT INTO usuario (email,senha) VALUES ('{$this->email}','{$this->senha}')";
         }
         return $conexao->executa($sql);
     }
 
     public static function find($idUsuario):Usuario{
         $conexao = new MySQL();
-        $sql = "SELECT * FROM usuarios WHERE idUsuario = {$idUsuario}";
+        $sql = "SELECT * FROM usuario WHERE idUsuario = {$idUsuario}";
         $resultado = $conexao->consulta($sql);
         $u = new Usuario($resultado[0]['email'],$resultado[0]['senha']);
         $u->setIdUsuario($resultado[0]['idUsuario']);
@@ -47,15 +47,20 @@ class Usuario{
 
     public function authenticate():bool{
         $conexao = new MySQL();
-        $sql = "SELECT idUsuario,senha FROM usuarios WHERE email = '{$this->email}'";
+        $sql = "SELECT idUsuario,senha FROM usuario WHERE email = '{$this->email}'";
         $resultados = $conexao->consulta($sql);
-        if(password_verify($this->senha,$resultados[0]['senha'])){
+        if(count($resultados)>0){
+            if(password_verify($this->senha,$resultados[0]['senha'])){
             session_start();
             $_SESSION['idUsuario'] = $resultados[0]['idUsuario'];
             $_SESSION['email'] = $resultados[0]['email'];
             return true;
-        }else{
+            }else{
+                return false;
+            }
+        } else {
             return false;
         }
+        
     }
 }
