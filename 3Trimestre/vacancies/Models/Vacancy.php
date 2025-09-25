@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . "\..\Configuration\MySQL.php";
+require_once __DIR__ . "/../Configuration/MySQL.php";
 
 class Vacancy{
     private string $description;
@@ -49,17 +49,18 @@ class Vacancy{
 
     public function save():bool{
         $conn = new MySQL();
-        if (isset($this->id)){
-            $sql = "UPDATE vacancies SET status='{$this->status}' WHERE id={$this->$id}";
-        } else {
-            $sql = "INSERT INTO vacancies (description, enterprise, status) VALUES ('$this->description', '$this->enterprise', '$this->status')";
-        }
-        $conn->execute($sql);
+        $sql = "INSERT INTO vacancies (description, enterprise, status) VALUES ('$this->description', '$this->enterprise', '$this->status')";
+        $result = $conn->execute($sql);
+        return $result;
     }
 
     public static function changeStatus($description, $newStatus):bool{
+        if($newStatus != 'aberta' and $newStatus != 'fechada'){
+            return false;
+        }
         $conn = new MySQL();
         $sql = "UPDATE vacancies SET status='{$newStatus}' WHERE description='{$description}'";
-        $conn->execute($sql);
+        $result = $conn->execute($sql);
+        return $result;
     }
 }

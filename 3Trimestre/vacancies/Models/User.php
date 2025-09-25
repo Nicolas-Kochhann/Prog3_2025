@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . "\..\Configuration\MySQL.php";
+require_once __DIR__ . "/../Configuration/MySQL.php";
 
 class User {
     private int $id;
