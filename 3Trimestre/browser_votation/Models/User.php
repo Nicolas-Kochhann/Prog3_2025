@@ -40,11 +40,16 @@ class User{
         $connection = new MySQL();
         $sql = "SELECT password FROM users WHERE email = {$this->email}";
         $result = $connection->select($sql);
-        password_verify($this->password, $result) ? true : false;
+        if(count($result) > 0){
+            password_verify($this->password, $result) ? true : false;
+        } else {
+            return false;
+        }
     }
 
     public function find(){
         $connection = new MySQL();
         $sql = "SELECT name, email FROM users WHERE id = {$this->id}";
+        return $connection->select($sql);
     }
 }

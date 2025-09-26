@@ -18,7 +18,7 @@ class Vote{
 
     public static function retrieveVotesByBrowser($browser_id){
         $connection = new MySQL();
-        $sql = "SELECT * FROM votes WHERE browser_id = {$browser_id}";
+        $sql = "SELECT COUNT(user_id) FROM votes WHERE browser_id = {$browser_id} GROUP BY browser_id";
         $connection->select($sql);
     }
 }
